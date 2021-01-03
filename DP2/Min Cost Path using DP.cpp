@@ -1,35 +1,57 @@
-int minCostPath(int **input, int m, int n, int i, int j,int **arr) {
-	// Base case
-	if(i == m- 1 && j == n- 1) {
-		return input[i][j];
+ 
+
+int minCostPath(int **input, int m, int n){
+    int **arr;
+	arr = new int *[n];
+	for (int i = 0; i < n; i++)
+	{
+		arr[i] = new int[m];
 	}
-
-	if(i >= m || j >= n) {
-		return INT_MAX;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; j++)
+		{
+			arr[i][j]=-1;
+		}
 	}
-    if(arr[i][j]!=-1){
-        return arr[i][j];
-    }
-
-	// Recursive calls
-	int x = minCostPath(input, m, n, i, j+1,arr);
-	int y = minCostPath(input, m, n, i+1, j+1,arr);
-	int z = minCostPath(input, m, n, i+1, j,arr);
-
-	// Small Calculation
-	int ans = min(x, min(y, z)) + input[i][j];
-    arr[i][j]=ans;
-	return arr[i][j];
-}
-
-int minCostPath(int **input, int m, int n) {
-    int **ans= new int*[m];
-    for(int i=0;i<m;i++){
-        ans[i]=new int[n];
-        for(int j=0;j<n;j++){
-            ans[i][j]=-1;
+    
+    arr[m-1][n-1]=input[m-1][n-1];
+    for(int i=m-1;i>=0;i--){
+		for(int j=n-1;j>=0;j--){
+            if(i==m-1 && j==n-1){
+                continue;
+            }
+            
+            int path1,path2,path3;
+            if(i+1>=m){
+				path1=INT_MAX;
+            }else{
+				path1=arr[i+1][j];
+            }
+            if(j+1>=n){
+                path2=INT_MAX;
+            }else{
+                path2=arr[i][j+1];
+            }
+            if(i+1>=m || j+1>=n){
+                path3=INT_MAX;
+            }else{
+                path3=arr[i+1][j+1];
+            }
+            
+            arr[i][j]=input[i][j]+min(min(path1,path2),path3);
+            
+            
         }
-        
     }
-	return minCostPath(input, m, n, 0, 0,ans);
+    
+		// for (int i = 0; i < n; i++){
+		// 	for (int j = 0; j < m; j++)
+		// 	{
+		// 		cout<<arr[i][j]<<" ";
+		// 	}
+		// cout<<endl;
+		// }
+    
+    return arr[0][0];
 }
